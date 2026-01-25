@@ -42,3 +42,40 @@ Non richiede installazioni, server o connessione internet.
 
 ## Struttura del progetto
 
+/
+├─ index.html
+├─ app.js
+├─ style.css
+├─ assets/
+│ └─ logo.jpg
+├─ docs/
+│ ├─ modello-dati.md
+│ ├─ flusso-operativo.md
+│ ├─ pdf.md
+│ └─ manutenzione.md
+└─ esempi/
+└─ CentraleA_2026.json
+
+
+---
+
+## Avvio
+
+Aprire `index.html` con doppio click.  
+Non serve altro.
+
+---
+
+## Note importanti
+
+- Il logo nel PDF è incorporato (base64) per garantire il funzionamento offline
+- Il file `assets/logo.jpg` viene usato solo per la UI
+- Il JSON può essere letto e ispezionato anche con editor esterni
+
+---
+
+## Stato del progetto
+
+Utilizzato in fase di prova su centrali reali.  
+Il codice è volutamente semplice e modificabile.
+
