@@ -1,0 +1,510 @@
+/* ========================================================================== */
+/* 01) THEME VARIABLES                                                        */
+/* ========================================================================== */
+
+:root {
+  --bg: #0b0d10;
+  --border: rgba(255,255,255,0.08);
+  --btn: #1b2230;
+  --btn2: #243149;
+  --danger: #ff6b6b;
+  --item-bg: #1b2230;
+  --item-border: rgba(255,255,255,0.18);
+  --muted: #9bb0c5;
+  --na: #a7b6c8;
+  --ok: #59d98e;
+  --panel: #12161c;
+  --panel2: #0f1318;
+  --section-bg: #151b23;
+  --section-border: rgba(120,160,255,0.35);
+  --text: #e7eef7;
+  --text-main: #e7eef7;
+  --text-muted: #9bb0c5;
+  --todo: #ffd166;
+}
+
+/* ========================================================================== */
+/* 02) BASE / RESET                                                           */
+/* ========================================================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  margin: 0;
+}
+
+/* ========================================================================== */
+/* 03) TOPBAR / HEADER                                                        */
+/* ========================================================================== */
+
+.brand {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+}
+
+.app-logo {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  height: 60px;
+  width: 60px;
+  object-fit: contain;
+  padding: 6px;
+}
+
+
+.subtitle {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.title h1 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.topbar {
+  align-items: center;
+  backdrop-filter: blur(10px);
+  background: rgba(11,13,16,0.9);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: space-between;
+  padding: 14px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ========================================================================== */
+/* 04) LAYOUT / CONTAINERS                                                    */
+/* ========================================================================== */
+
+.container {
+  display: grid;
+  gap: 14px;
+  margin: 16px auto;
+  max-width: 1100px;
+  padding: 0 12px 40px;
+}
+
+.empty-hint {
+  color: var(--muted);
+  padding: 12px;
+}
+
+.sections {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+}
+
+/* ========================================================================== */
+/* 05) PANELS                                                                 */
+/* ========================================================================== */
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.panel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.panel-head {
+  align-items: center;
+  background: var(--panel2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  padding: 12px 12px;
+}
+
+.panel-title {
+  font-weight: 700;
+}
+
+/* ========================================================================== */
+/* 06) BUTTONS                                                                */
+/* ========================================================================== */
+
+.btn {
+  background: var(--btn);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 9px 10px;
+}
+
+.btn:hover {
+  background: var(--btn2);
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.btn-primary {
+  background: #2b3a57;
+}
+
+.btn-small {
+  font-size: 13px;
+  padding: 7px 9px;
+}
+
+.icon-btn {
+  background: #101722;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 6px 8px;
+}
+
+.icon-btn:hover {
+  background: var(--btn2);
+}
+
+.icon-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.35;
+}
+
+.icon-btn.danger {
+  border-color: rgba(255,107,107,0.35);
+}
+
+/* ========================================================================== */
+/* 07) META (DATI GENERALI)                                                   */
+/* ========================================================================== */
+
+.meta-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  padding: 12px;
+}
+
+.meta-grid .full {
+  grid-column: 1 / -1;
+}
+
+.meta-grid label {
+  display: grid;
+  gap: 6px;
+}
+
+.meta-grid label span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.meta-grid input,
+.meta-grid textarea {
+  background: #0b0f14;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 14px;
+  padding: 10px;
+  width: 100%;
+}
+
+/* ========================================================================== */
+/* 08) SECTIONS (ACCORDION)                                                   */
+/* ========================================================================== */
+
+.badge {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 3px 8px;
+}
+
+.badge.ko {
+  border-color: rgba(255,107,107,0.4);
+  color: var(--danger);
+}
+
+.badge.na {
+  border-color: rgba(167,182,200,0.4);
+  color: var(--na);
+}
+
+.badge.ok {
+  border-color: rgba(89,217,142,0.4);
+  color: var(--ok);
+}
+
+.badge.todo {
+  border-color: rgba(255,209,102,0.4);
+  color: var(--todo);
+}
+
+.badges {
+  color: var(--muted);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 12px;
+  gap: 8px;
+}
+
+.section {
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.03),
+    rgba(0,0,0,0.08)
+  );
+  border: 1px solid var(--section-border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.section summary {
+  background: var(--section-bg);
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+  cursor: pointer;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  list-style: none;
+  padding: 14px;
+}
+
+.section summary::-webkit-details-marker {
+  display: none;
+}
+
+.section-body {
+  background: rgba(255,255,255,0.02);
+  padding: 12px 14px 14px;
+}
+
+.section-title {
+  align-items: center;
+  display: flex;
+  font-weight: 750;
+  gap: 10px;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.section-title-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.section-tools {
+  align-items: center;
+  display: flex;
+  flex-shrink: 0;
+  gap: 6px;
+}
+
+.summary-right {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+}
+
+/* ========================================================================== */
+/* 09) ITEMS (CONTROLLI)                                                      */
+/* ========================================================================== */
+
+.item {
+  background: var(--item-bg);
+  border: 1px solid var(--item-border);
+  border-radius: 12px;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.04),
+    0 6px 14px rgba(0,0,0,0.35);
+  margin-left: 16px;
+  margin-right: 6px;
+  padding: 10px;
+}
+
+.item:hover {
+  border-color: rgba(255,255,255,0.35);
+}
+
+.item-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.item-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.item-left {
+  display: grid;
+  gap: 8px;
+}
+
+.item-text {
+  color: var(--text-main);
+  font-weight: 650;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.item-title-left {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  min-width: 0;
+}
+
+.item-title-row {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.item-tools {
+  align-items: center;
+  display: flex;
+  flex-shrink: 0;
+  gap: 6px;
+}
+
+.note {
+  background: #0b0f14;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 14px;
+  padding: 10px;
+  width: 100%;
+}
+
+.note.required {
+  border-color: rgba(255,107,107,0.6);
+}
+
+.row-actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.small-muted {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* ========================================================================== */
+/* 10) STATE BUTTONS                                                          */
+/* ========================================================================== */
+
+.state-btn {
+  background: #101722;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 13px;
+  padding: 6px 8px;
+  transition: transform 0.05s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.state-btn:active {
+  transform: scale(0.98);
+}
+
+.state-btn.active {
+  background: rgba(255,255,255,0.10);
+  border-color: rgba(255,255,255,0.22);
+}
+
+.state-btn.active.kind-ko {
+  background: rgba(255, 107, 107, 0.18);
+  border-color: rgba(255, 107, 107, 0.55);
+  color: #ffd0d0;
+}
+
+.state-btn.active.kind-na {
+  background: rgba(167, 182, 200, 0.18);
+  border-color: rgba(167, 182, 200, 0.45);
+  color: #e3edff;
+}
+
+.state-btn.active.kind-ok {
+  background: rgba(89, 217, 142, 0.18);
+  border-color: rgba(89, 217, 142, 0.45);
+  color: #c9ffe0;
+}
+
+.state-btn.active.kind-todo {
+  background: rgba(255, 209, 102, 0.18);
+  border-color: rgba(255, 209, 102, 0.45);
+  color: #ffe7b0;
+}
+
+/* ========================================================================== */
+/* 11) PROGRESS                                                               */
+/* ========================================================================== */
+
+.progress {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  height: 8px;
+  overflow: hidden;
+  width: 180px;
+}
+
+.progress > div {
+  background: rgba(255,255,255,0.35);
+  height: 100%;
+  width: 0%;
+}
+
+.progress-label {
+  color: var(--muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+/* ========================================================================== */
+/* 12) RESPONSIVE                                                             */
+/* ========================================================================== */
+
+@media (max-width: 800px) {
+  .meta-grid {
+    grid-template-columns: 1fr;
+  }
+}

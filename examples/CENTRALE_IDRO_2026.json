@@ -1,0 +1,378 @@
+{
+  "meta": {
+    "centraleNome": "Centrale IDRO",
+    "anno": 2026,
+    "preposto": "Tony",
+    "operatori": "Alan",
+    "dataInizio": "2026-01-25",
+    "dataFine": "2026-01-31",
+    "appVersion": "1.0.0"
+  },
+  "sezioni": [
+    {
+      "id": "sec_0001",
+      "titolo": "Armadi automatismi",
+      "order": 10,
+      "items": [
+        {
+          "id": "itm_0001",
+          "testo": "Backup SCADA",
+          "stato": "ok",
+          "note": "IMPIANTO",
+          "timestamp": "2026-01-25T16:26:49.141Z",
+          "order": 0
+        },
+        {
+          "id": "itm_0002",
+          "testo": "Pulizia filtri armadi",
+          "stato": "todo",
+          "note": "",
+          "timestamp": "",
+          "order": 0
+        },
+        {
+          "id": "itm_0003",
+          "testo": "Verifica/sostituzione batterie PLC",
+          "stato": "todo",
+          "note": "",
+          "timestamp": "",
+          "order": 0
+        },
+        {
+          "id": "itm_20260125_133718_f6wwz",
+          "testo": "Backup SCADA Gruppo",
+          "stato": "todo",
+          "note": "",
+          "timestamp": "",
+          "order": 0
+        }
+      ]
+    },
+    {
+      "id": "sec_0002",
+      "titolo": "Servizi ausiliari Corrente Continua",
+      "order": 20,
+      "items": [
+        {
+          "id": "itm_0005",
+          "testo": "Controllo raddrizzatori",
+          "stato": "ok",
+          "note": "",
+          "timestamp": "2026-01-25T16:28:38.074Z",
+          "order": 20
+        },
+        {
+          "id": "itm_20260125_140828_lqej0",
+          "testo": "Prova scarica batterie",
+          "stato": "todo",
+          "note": "",
+          "timestamp": "",
+          "order": 10
+        },
+        {
+          "id": "itm_20260125_140840_q3bas",
+          "testo": "Ispezione e pulizia batterie di impianto",
+          "stato": "todo",
+          "note": "",
+          "timestamp": "",
+          "order": 30
+        }
+      ]
+    },
+    {
+      "id": "sec_0003",
+      "titolo": "Servizi ausiliari Corrente Alternata",
+      "order": 30,
+      "items": [
+        {
+          "id": "itm_0007",
+          "testo": "Controllo e pulizia moduli Inverter",
+          "stato": "todo",
+          "note": "",
+          "timestamp": "",
+          "order": 10
+        },
+        {
+          "id": "itm_20260125_140914_fz6ii",
+          "testo": "Ispezione e pulizia G.E.",
+          "stato": "todo",
+          "note": "",
+          "timestamp": "",
+          "order": 20
+        },
+        {
+          "id": "itm_20260125_140920_km5cm",
+          "testo": "Prova G.E.",
+          "stato": "todo",
+          "note": "",
+          "timestamp": "",
+          "order": 30
+        }
+      ]
+    },
+    {
+      "id": "sec_0004",
+      "titolo": "Blindati M.T.",
+      "order": 40,
+      "items": [
+        {
+          "id": "itm_0009",
+          "testo": "Pulizia e verifica serraggi blindati sbarra servizi ausiliari",
+          "stato": "todo",
+          "note": "",
+          "timestamp": "",
+          "order": 10
+        },
+        {
+          "id": "itm_20260125_140711_brig6",
+          "testo": "Pulizia e verifica serraggi blindati sbarra di gruppo",
+          "stato": "todo",
+          "note": "",
+          "timestamp": "",
+          "order": 20
+        },
+        {
+          "id": "itm_20260125_140755_xo8tz",
+          "testo": "Ispezione e verifica serraggi TR Gruppo",
+          "stato": "todo",
+          "note": "",
+          "timestamp": "",
+          "order": 30
+        },
+        {
+          "id": "itm_20260125_140808_xetvb",
+          "testo": "Ispezione e verifica serraggi TRSA",
+          "stato": "todo",
+          "note": "",
+          "timestamp": "",
+          "order": 40
+        },
+        {
+          "id": "itm_20260125_140813_00v38",
+          "testo": "Ispezione e verifica serraggi TRSAG",
+          "stato": "todo",
+          "note": "",
+          "timestamp": "",
+          "order": 50
+        },
+        {
+          "id": "itm_20260125_141016_gm8ob",
+          "testo": "Pulizia e verifica serraggi blindati arrivo linea",
+          "stato": "todo",
+          "note": "",
+          "timestamp": "",
+          "order": 60
+        }
+      ]
+    },
+    {
+      "id": "sec_0005",
+      "titolo": "Alternatore",
+      "order": 70,
+      "items": [
+        {
+          "id": "itm_0012",
+          "testo": "Ispezione generale e pulizia",
+          "stato": "todo",
+          "note": "",
+          "timestamp": "",
+          "order": 10
+        },
+        {
+          "id": "itm_0013",
+          "testo": "Verifica sensori e cablaggi",
+          "stato": "todo",
+          "note": "",
+          "timestamp": "",
+          "order": 20
+        },
+        {
+          "id": "itm_20260125_133528_lgi6p",
+          "testo": "Prova galleggianti olio Supp. Superiore",
+          "stato": "todo",
+          "note": "",
+          "timestamp": "",
+          "order": 30
+        },
+        {
+          "id": "itm_20260125_133540_pyb0j",
+          "testo": "Verifica spazzole di misura",
+          "stato": "todo",
+          "note": "CG657",
+          "timestamp": "",
+          "order": 40
+        }
+      ]
+    },
+    {
+      "id": "sec_0006",
+      "titolo": "SOD",
+      "order": 80,
+      "items": [
+        {
+          "id": "itm_0014",
+          "testo": "Verifica funzionamento galleggianti",
+          "stato": "todo",
+          "note": "",
+          "timestamp": "",
+          "order": 10
+        },
+        {
+          "id": "itm_20260125_142659_cysmp",
+          "testo": "Verifica perdite raccordi",
+          "stato": "todo",
+          "note": "",
+          "timestamp": "",
+          "order": 20
+        },
+        {
+          "id": "itm_20260125_142704_5674j",
+          "testo": "Verifica livello olio",
+          "stato": "todo",
+          "note": "",
+          "timestamp": "",
+          "order": 30
+        }
+      ]
+    },
+    {
+      "id": "sec_0007",
+      "titolo": "Refrigeranti",
+      "order": 90,
+      "items": [
+        {
+          "id": "itm_0015",
+          "testo": "Prova funzionamento pompe",
+          "stato": "todo",
+          "note": "",
+          "timestamp": "",
+          "order": 10
+        },
+        {
+          "id": "itm_20260125_142637_9sml2",
+          "testo": "Verifica perdite raccordi",
+          "stato": "todo",
+          "note": "",
+          "timestamp": "",
+          "order": 20
+        }
+      ]
+    },
+    {
+      "id": "sec_0008",
+      "titolo": "Iniezione e frenatura",
+      "order": 100,
+      "items": [
+        {
+          "id": "itm_0016",
+          "testo": "Prova funzionamento pompe sollevamento",
+          "stato": "todo",
+          "note": "",
+          "timestamp": "",
+          "order": 10
+        },
+        {
+          "id": "itm_20260125_142832_728w6",
+          "testo": "Prove funzionamento e ispezione compressore freni",
+          "stato": "todo",
+          "note": "",
+          "timestamp": "",
+          "order": 20
+        },
+        {
+          "id": "itm_20260125_142843_dqwao",
+          "testo": "Prova funzionamento martinetti",
+          "stato": "todo",
+          "note": "",
+          "timestamp": "",
+          "order": 30
+        }
+      ]
+    },
+    {
+      "id": "sec_0009",
+      "titolo": "Distributore",
+      "order": 110,
+      "items": [
+        {
+          "id": "itm_0017",
+          "testo": "Ispezione e pulizia FC pale",
+          "stato": "todo",
+          "note": "",
+          "timestamp": "",
+          "order": 10
+        },
+        {
+          "id": "itm_20260125_142923_0h44o",
+          "testo": "Prova galleggianti olio tenuta turbina",
+          "stato": "todo",
+          "note": "",
+          "timestamp": "",
+          "order": 20
+        }
+      ]
+    },
+    {
+      "id": "sec_0010",
+      "titolo": "Organo guardia macchina",
+      "order": 120,
+      "items": [
+        {
+          "id": "itm_0018",
+          "testo": "Verifica dispositivi di sicurezza",
+          "stato": "todo",
+          "note": "",
+          "timestamp": "",
+          "order": 10
+        }
+      ]
+    },
+    {
+      "id": "sec_0011",
+      "titolo": "Sgrigliatore",
+      "order": 130,
+      "items": [
+        {
+          "id": "itm_0019",
+          "testo": "Prova funzionamento e pulizia",
+          "stato": "todo",
+          "note": "",
+          "timestamp": "",
+          "order": 10
+        },
+        {
+          "id": "itm_20260125_133336_d49mx",
+          "testo": "Prova G.E.",
+          "stato": "todo",
+          "note": "",
+          "timestamp": "",
+          "order": 20
+        },
+        {
+          "id": "itm_20260125_133401_y7sw1",
+          "testo": "Ispezione quadri",
+          "stato": "todo",
+          "note": "",
+          "timestamp": "",
+          "order": 30
+        },
+        {
+          "id": "itm_20260125_133407_4dbt8",
+          "testo": "Prova luci",
+          "stato": "todo",
+          "note": "",
+          "timestamp": "",
+          "order": 40
+        }
+      ]
+    }
+  ],
+  "app": {
+    "schemaVersion": 1,
+    "lastSavedWith": "1.0.0"
+  },
+  "audit": {
+    "lastModified": "2026-01-25T16:28:45.757Z",
+    "lastModifiedBy": "Alan"
+  }
+}

@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Controlli Sistematici</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+  <img class="app-logo" src="assets/logo.jpg" alt="Logo" />
+  <div class="title">
+    <h1>Controlli sistematici</h1>
+    <div id="subtitle" class="subtitle">Apri un file JSON per iniziare.</div>
+  </div>
+</div>
+
+    <div class="toolbar">
+      <input id="fileInput" type="file" accept=".json,application/json" hidden />
+      <button id="btnOpen" class="btn">Apri JSON</button>
+      <button id="btnSave" class="btn btn-primary" disabled>Esporta JSON</button>
+      <button id="btnPdfBlank" class="btn" disabled>PDF modulo vuoto</button>
+      <button id="btnPdfState" class="btn" disabled>PDF stato attuale</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Dati generali</div>
+        <div class="panel-actions">
+          <button id="btnExpandAll" class="btn btn-small" disabled>Espandi tutto</button>
+          <button id="btnCollapseAll" class="btn btn-small" disabled>Chiudi tutto</button>
+        </div>
+      </div>
+
+      <div class="meta-grid">
+        <label>
+          <span>Centrale</span>
+          <input id="metaCentraleNome" type="text" placeholder="es. Centrale A" disabled />
+        </label>
+        <label>
+          <span>Anno</span>
+          <input id="metaAnno" type="number" min="2000" max="2100" disabled />
+        </label>
+        <label>
+          <span>Preposto</span>
+          <input id="metaPreposto" type="text" placeholder="es. Rossi" disabled />
+        </label>
+        <label>
+          <span>Operatori</span>
+          <input id="metaOperatori" type="text" placeholder="es. Bianchi, sennò sarà il preposto" disabled />
+        </label>
+        <label>
+          <span>Data inizio</span>
+          <input id="metaDataInizio" type="date" disabled />
+        </label>
+        <label>
+          <span>Data fine</span>
+          <input id="metaDataFine" type="date" disabled />
+        </label>
+        <label class="full">
+          <span>Note generali</span>
+          <textarea id="metaNoteGenerali" rows="2" disabled></textarea>
+        </label>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Sezioni</div>
+        <div class="panel-actions">
+          <button id="btnAddSection" class="btn btn-small" disabled>+ Aggiungi sezione</button>
+        </div>
+      </div>
+
+      <div id="sections" class="sections">
+        <div class="empty-hint">Nessun file caricato.</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Lib PDF offline -->
+  <script src="libs/jspdf.umd.min.js"></script>
+<script src="libs/jspdf-autotable.min.js"></script>
+
+  <!-- App -->
+  <script src="app.js"></script>
+</body>
+</html>
