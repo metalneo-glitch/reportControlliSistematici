@@ -621,7 +621,7 @@ function sortByOrder(arr) {
 
 function enableUi(enabled) {
   const ids = [
-    "btnSave", "btnPdfBlank", "btnPdfState",
+    "btnSave", "btnClose", "btnResetStates", "btnPdfBlank", "btnPdfState",
     "btnExpandAll", "btnCollapseAll", "btnAddSection",
     "metaCentraleNome", "metaAnno", "metaPreposto",
     "metaDataInizio", "metaDataFine", "metaNoteGenerali",
@@ -640,6 +640,11 @@ function updateSubtitle() {
   const nome = model.meta.centraleNome || "(centrale non impostata)";
   const anno = model.meta.anno || "";
   sub.textContent = `${nome} | ${anno} | File: ${openedFileName || "non salvato"}`;
+}
+
+function setSubtitleEmpty() {
+  const sub = document.getElementById("subtitle");
+  if (sub) sub.textContent = "Apri un file JSON per iniziare.";
 }
 
 /* ========================================================================== */
@@ -670,6 +675,8 @@ function normalizeModel(m) {
     // items
     s.items = Array.isArray(s.items) ? s.items : [];
     let itemOrder = 10;
+    const itemOrders = [];
+    let needsReorder = false;
 
     for (const it of s.items) {
       if (!it.id) it.id = makeUniqueId("itm", collectAllIds(m));
@@ -681,10 +688,25 @@ function normalizeModel(m) {
 
       if (it.order === undefined || it.order === null || Number.isNaN(Number(it.order))) {
         it.order = itemOrder;
+        needsReorder = true;
       } else {
         it.order = Number(it.order);
       }
+      itemOrders.push(it.order);
       itemOrder = Math.max(itemOrder, it.order) + 10;
+    }
+
+    if (!needsReorder) {
+      const uniq = new Set(itemOrders);
+      if (uniq.size !== itemOrders.length) needsReorder = true;
+    }
+
+    if (needsReorder && s.items.length) {
+      let order = 10;
+      for (const it of s.items) {
+        it.order = order;
+        order += 10;
+      }
     }
   }
 
@@ -744,6 +766,16 @@ function renderMeta() {
   document.getElementById("metaNoteGenerali").value = model.meta.noteGenerali ?? "";
 }
 
+function clearMetaInputs() {
+  document.getElementById("metaCentraleNome").value = "";
+  document.getElementById("metaAnno").value = "";
+  document.getElementById("metaPreposto").value = "";
+  document.getElementById("metaOperatori").value = "";
+  document.getElementById("metaDataInizio").value = "";
+  document.getElementById("metaDataFine").value = "";
+  document.getElementById("metaNoteGenerali").value = "";
+}
+
 /* ========================================================================== */
 /* 07) SECTION STATS / PROGRESS                                                */
 /* ========================================================================== */
@@ -788,6 +820,47 @@ function makeProgressNode(pct) {
   wrap.appendChild(bar);
   return wrap;
 }
+
+function computeGlobalProgress() {
+  if (!model || !Array.isArray(model.sezioni)) {
+    return { done: 0, total: 0, pct: 0, ok: 0, ko: 0, todo: 0, na: 0 };
+  }
+
+  let ok = 0, ko = 0, todo = 0, na = 0;
+
+  for (const s of model.sezioni) {
+    for (const it of (s.items || [])) {
+      const st = (it.stato || "todo");
+      if (st === "ok") ok++;
+      else if (st === "ko") ko++;
+      else if (st === "na") na++;
+      else todo++;
+    }
+  }
+
+  // escludo NA dal totale "applicabile"
+  const total = ok + ko + todo;
+  const done = ok + ko;
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+
+  return { done, total, pct, ok, ko, todo, na };
+}
+
+function renderGlobalProgress() {
+  const fill = document.getElementById("globalProgressFill");
+  const txt = document.getElementById("globalProgressText");
+  const counts = document.getElementById("globalProgressCounts");
+
+  if (!fill || !txt || !counts) return;
+
+  const p = computeGlobalProgress();
+  fill.style.width = `${p.pct}%`;
+  txt.textContent = `${p.pct}%`;
+  counts.textContent = p.total > 0
+    ? `(${p.done}/${p.total} completati, NA: ${p.na})`
+    : `(nessun controllo)`;
+}
+
 
 /* ========================================================================== */
 /* 08) FINDERS                                                                 */
@@ -1095,6 +1168,7 @@ function rerenderAll() {
 
   updateSubtitle();
   renderMeta();
+  renderGlobalProgress();
   renderSections(openSet);
 }
 
@@ -1402,6 +1476,49 @@ function openJsonFile(file) {
   reader.readAsText(file);
 }
 
+function createNewFile() {
+  if (model) {
+    const ok = confirm("Creare un nuovo file? Le modifiche non salvate andranno perse.");
+    if (!ok) return;
+  }
+
+  const sections = [
+    "Servizi Ausiliari Corrente Alternata",
+    "Servizi Ausiliari Corrente Continua",
+    "Blindati M.T.",
+    "S.O.D.",
+    "Sgrigliatore"
+  ];
+
+  const existing = new Set();
+  const base = {
+    app: { schemaVersion: 1 },
+    meta: {},
+    sezioni: sections.map((titolo, i) => ({
+      id: makeUniqueId("sec", existing),
+      titolo,
+      order: (i + 1) * 10,
+      items: [
+        {
+          id: makeUniqueId("itm", existing),
+          testo: "Ispezione e pulizia",
+          order: 10,
+          stato: "todo",
+          note: "",
+          timestamp: ""
+        }
+      ]
+    })),
+    audit: {}
+  };
+
+  model = normalizeModel(base);
+  openedFileName = "";
+  enableUi(true);
+  bindAfterLoad();
+  rerenderAll();
+}
+
 /* ========================================================================== */
 /* 14) PDF                                                                     */
 /* ========================================================================== */
@@ -1431,12 +1548,12 @@ async function generatePdf(isBlank) {
   doc.setFontSize(10);
   doc.text(`Preposto: ${preposto}`, 14, 22);
   if (operatori) {
-    doc.text(`Operatori: ${operatori}`, 14, 32);
+    doc.text(`Operatori: ${operatori}`, 14, 27);
   }
   else {
-    doc.text(`Operatori: ${preposto}`, 14, 32);
+    doc.text(`Operatori: ${preposto}`, 14, 27);
   }
-  doc.text(`Periodo: ${dataInizio}  ${dataFine ? "-> " + dataFine : ""}`, 14, 27);
+  doc.text(`Periodo: ${dataInizio}  ${dataFine ? "-> " + dataFine : ""}`, 14, 32);
 
   doc.setDrawColor(200);
   doc.line(14, 39, 196, 39);
@@ -1574,6 +1691,54 @@ function expandCollapseAll(open) {
   document.querySelectorAll("details.section").forEach(d => d.open = open);
 }
 
+function resetAllStates() {
+  if (!model) return;
+
+  const ok = confirm("Confermi il reset completo?\n\n- Stati: tutti su \"Da fare\"\n- Note e dati generali: cancellati");
+  if (!ok) return;
+
+  for (const s of model.sezioni || []) {
+    for (const it of s.items || []) {
+      it.stato = "todo";
+      it.note = "";
+      it.timestamp = "";
+    }
+  }
+
+  if (!model.meta) model.meta = {};
+  model.meta.centraleNome = "";
+  model.meta.anno = "";
+  model.meta.preposto = "";
+  model.meta.operatori = "";
+  model.meta.dataInizio = "";
+  model.meta.dataFine = "";
+  model.meta.noteGenerali = "";
+
+  model.audit = {};
+
+  touchAudit();
+  rerenderAll();
+}
+
+function closeFile() {
+  if (!model) return;
+
+  const ok = confirm("Chiudere il file corrente? Le modifiche non salvate andranno perse.");
+  if (!ok) return;
+
+  model = null;
+  openedFileName = "";
+  enableUi(false);
+  clearMetaInputs();
+  setSubtitleEmpty();
+  renderGlobalProgress();
+
+  const sections = document.getElementById("sections");
+  if (sections) {
+    sections.innerHTML = '<div class="empty-hint">Nessun file caricato.</div>';
+  }
+}
+
 /* ========================================================================== */
 /* 16) INIT                                                                    */
 /* ========================================================================== */
@@ -1587,6 +1752,7 @@ function init() {
   enableUi(false);
 
   const fileInput = document.getElementById("fileInput");
+  document.getElementById("btnNew").addEventListener("click", createNewFile);
   document.getElementById("btnOpen").addEventListener("click", () => fileInput.click());
   fileInput.addEventListener("change", () => {
     const file = fileInput.files?.[0];
@@ -1595,6 +1761,8 @@ function init() {
   });
 
   document.getElementById("btnSave").addEventListener("click", exportJson);
+  document.getElementById("btnClose").addEventListener("click", closeFile);
+  document.getElementById("btnResetStates").addEventListener("click", resetAllStates);
   document.getElementById("btnPdfBlank").addEventListener("click", () => generatePdf(true));
   document.getElementById("btnPdfState").addEventListener("click", () => generatePdf(false));
 

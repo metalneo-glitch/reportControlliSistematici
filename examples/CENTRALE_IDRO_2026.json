@@ -20,7 +20,7 @@
           "stato": "ok",
           "note": "IMPIANTO",
           "timestamp": "2026-01-25T16:26:49.141Z",
-          "order": 0
+          "order": 10
         },
         {
           "id": "itm_0002",
@@ -28,7 +28,7 @@
           "stato": "todo",
           "note": "",
           "timestamp": "",
-          "order": 0
+          "order": 20
         },
         {
           "id": "itm_0003",
@@ -36,7 +36,7 @@
           "stato": "todo",
           "note": "",
           "timestamp": "",
-          "order": 0
+          "order": 30
         },
         {
           "id": "itm_20260125_133718_f6wwz",
@@ -44,7 +44,7 @@
           "stato": "todo",
           "note": "",
           "timestamp": "",
-          "order": 0
+          "order": 40
         }
       ]
     },
@@ -372,7 +372,7 @@
     "lastSavedWith": "1.0.0"
   },
   "audit": {
-    "lastModified": "2026-01-25T16:28:45.757Z",
+    "lastModified": "2026-01-26T17:53:00.315Z",
     "lastModifiedBy": "Alan"
   }
 }

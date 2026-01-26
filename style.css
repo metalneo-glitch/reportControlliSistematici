@@ -1,31 +1,29 @@
 /* ========================================================================== */
 /* 01) THEME VARIABLES                                                        */
-/* ========================================================================== */
 
 :root {
-  --bg: #3c6d30;
-  --border: rgba(255,255,255,0.08);
-  --btn: #1b2230;
-  --btn2: #243149;
+  --bg: #2f5a35;
+  --border: rgba(255,255,255,0.1);
+  --btn: #1e2532;
+  --btn2: #273244;
   --danger: #ff6b6b;
-  --item-bg: #3f8300;
-  --item-border: rgba(255,255,255,0.18);
-  --muted: #9bb0c5;
-  --na: #a7b6c8;
-  --ok: #59d98e;
-  --panel: #12161c;
-  --panel2: #0f1318;
-  --section-bg: #8b2d2d;
-  --section-border: rgba(120,160,255,0.35);
-  --text: #e7eef7;
-  --text-main: #e7eef7;
-  --text-muted: #9bb0c5;
-  --todo: #ffd166;
+  --item-bg: #2f6a34;
+  --item-border: rgba(255,255,255,0.22);
+  --muted: #b2c0cf;
+  --na: #b6c4d6;
+  --ok: #58d39b;
+  --panel: #121820;
+  --panel2: #0e141b;
+  --section-bg: #6f2f36;
+  --section-border: rgba(140,170,220,0.28);
+  --text: #edf3f8;
+  --text-main: #f4f7fb;
+  --text-muted: #b2c0cf;
+  --todo: #ffcf66;
 }
 
 /* ========================================================================== */
 /* 02) BASE / RESET                                                           */
-/* ========================================================================== */
 
 * {
   box-sizing: border-box;
@@ -40,13 +38,6 @@ body {
 
 /* ========================================================================== */
 /* 03) TOPBAR / HEADER                                                        */
-/* ========================================================================== */
-
-.brand {
-  align-items: center;
-  display: flex;
-  gap: 12px;
-}
 
 .app-logo {
   background: rgba(255,255,255,0.06);
@@ -58,6 +49,11 @@ body {
   padding: 6px;
 }
 
+.brand {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+}
 
 .subtitle {
   color: var(--muted);
@@ -71,10 +67,20 @@ body {
   margin: 0;
 }
 
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .topbar {
   align-items: center;
   backdrop-filter: blur(10px);
-  background: rgba(0, 255, 242, 0.06);;
+  background: linear-gradient(
+    180deg,
+    rgba(12, 20, 14, 0.85),
+    rgba(12, 20, 14, 0.55)
+  );
   border-bottom: 1px solid var(--border);
   display: flex;
   flex-wrap: wrap;
@@ -86,15 +92,8 @@ body {
   z-index: 10;
 }
 
-.toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
 /* ========================================================================== */
 /* 04) LAYOUT / CONTAINERS                                                    */
-/* ========================================================================== */
 
 .container {
   display: grid;
@@ -117,13 +116,19 @@ body {
 
 /* ========================================================================== */
 /* 05) PANELS                                                                 */
-/* ========================================================================== */
 
 .panel {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 12px;
+  background: linear-gradient(
+    180deg,
+    rgba(18, 24, 32, 0.92),
+    rgba(12, 18, 26, 0.92)
+  );
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
   overflow: hidden;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.04),
+    0 10px 24px rgba(0,0,0,0.25);
 }
 
 .panel-actions {
@@ -134,8 +139,12 @@ body {
 
 .panel-head {
   align-items: center;
-  background: var(--panel2);
-  border-bottom: 1px solid var(--border);
+  background: linear-gradient(
+    180deg,
+    rgba(10, 16, 24, 0.95),
+    rgba(10, 16, 24, 0.8)
+  );
+  border-bottom: 1px solid rgba(255,255,255,0.06);
   display: flex;
   gap: 10px;
   justify-content: space-between;
@@ -148,7 +157,6 @@ body {
 
 /* ========================================================================== */
 /* 06) BUTTONS                                                                */
-/* ========================================================================== */
 
 .btn {
   background: var(--btn);
@@ -160,13 +168,16 @@ body {
   padding: 9px 10px;
 }
 
-.btn:hover {
-  background: var(--btn2);
+.btn-icon {
+  align-items: center;
+  display: inline-flex;
+  gap: 8px;
 }
 
-.btn:disabled {
-  cursor: not-allowed;
-  opacity: 0.45;
+.btn-icon svg {
+  fill: currentColor;
+  height: 16px;
+  width: 16px;
 }
 
 .btn-primary {
@@ -176,6 +187,15 @@ body {
 .btn-small {
   font-size: 13px;
   padding: 7px 9px;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.btn:hover {
+  background: var(--btn2);
 }
 
 .icon-btn {
@@ -188,8 +208,8 @@ body {
   padding: 6px 8px;
 }
 
-.icon-btn:hover {
-  background: var(--btn2);
+.icon-btn.danger {
+  border-color: rgba(255,107,107,0.35);
 }
 
 .icon-btn:disabled {
@@ -197,13 +217,12 @@ body {
   opacity: 0.35;
 }
 
-.icon-btn.danger {
-  border-color: rgba(255,107,107,0.35);
+.icon-btn:hover {
+  background: var(--btn2);
 }
 
 /* ========================================================================== */
 /* 07) META (DATI GENERALI)                                                   */
-/* ========================================================================== */
 
 .meta-grid {
   display: grid;
@@ -216,6 +235,17 @@ body {
   grid-column: 1 / -1;
 }
 
+.meta-grid input,
+.meta-grid textarea {
+  background: #2b3f32;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 14px;
+  padding: 10px;
+  width: 100%;
+}
+
 .meta-grid label {
   display: grid;
   gap: 6px;
@@ -226,20 +256,8 @@ body {
   font-size: 12px;
 }
 
-.meta-grid input,
-.meta-grid textarea {
-  background: #324632;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  color: var(--text);
-  font-size: 14px;
-  padding: 10px;
-  width: 100%;
-}
-
 /* ========================================================================== */
 /* 08) SECTIONS (ACCORDION)                                                   */
-/* ========================================================================== */
 
 .badge {
   border: 1px solid var(--border);
@@ -278,17 +296,24 @@ body {
 .section {
   background: linear-gradient(
     180deg,
-    rgba(255,255,255,0.03),
-    rgba(0,0,0,0.08)
+    rgba(30, 44, 34, 0.9),
+    rgba(20, 32, 26, 0.95)
   );
-  border: 1px solid var(--section-border);
-  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 16px;
   overflow: hidden;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.04),
+    0 12px 28px rgba(0,0,0,0.28);
 }
 
 .section summary {
-  background: var(--section-bg);
-  border-bottom: 1px solid rgba(255,255,255,0.12);
+  background: linear-gradient(
+    180deg,
+    rgba(112, 49, 56, 0.95),
+    rgba(88, 38, 44, 0.95)
+  );
+  border-bottom: 1px solid rgba(255,255,255,0.1);
   cursor: pointer;
   display: flex;
   gap: 10px;
@@ -302,7 +327,7 @@ body {
 }
 
 .section-body {
-  background: rgba(255,255,255,0.02);
+  background: rgba(255,255,255,0.03);
   padding: 12px 14px 14px;
 }
 
@@ -336,22 +361,17 @@ body {
 
 /* ========================================================================== */
 /* 09) ITEMS (CONTROLLI)                                                      */
-/* ========================================================================== */
 
 .item {
   background: var(--item-bg);
-  border: 1px solid var(--item-border);
-  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 14px;
   box-shadow:
-    0 1px 0 rgba(255,255,255,0.04),
-    0 6px 14px rgba(0,0,0,0.35);
+    0 1px 0 rgba(255,255,255,0.05),
+    0 10px 22px rgba(0,0,0,0.25);
+  margin: 12px 6px;
   margin-left: 16px;
-  margin-right: 6px;
   padding: 10px;
-}
-
-.item:hover {
-  border-color: rgba(255,255,255,0.35);
 }
 
 .item-actions {
@@ -399,6 +419,10 @@ body {
   gap: 6px;
 }
 
+.item:hover {
+  border-color: rgba(255,255,255,0.35);
+}
+
 .note {
   background: #0b0f14;
   border: 1px solid var(--border);
@@ -428,7 +452,6 @@ body {
 
 /* ========================================================================== */
 /* 10) STATE BUTTONS                                                          */
-/* ========================================================================== */
 
 .state-btn {
   background: #101722;
@@ -438,45 +461,103 @@ body {
   cursor: pointer;
   font-size: 13px;
   padding: 6px 8px;
-  transition: transform 0.05s ease, background 0.15s ease, border-color 0.15s ease;
+  transition: transform 0.05s ease, background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.state-btn.active {
+  background: rgba(255,255,255,0.16);
+  border-color: rgba(255,255,255,0.35);
+  box-shadow:
+    0 0 0 2px rgba(255,255,255,0.08),
+    0 4px 10px rgba(0,0,0,0.25);
+}
+
+.state-btn.active.kind-ko {
+  background: rgba(255, 107, 107, 0.28);
+  border-color: rgba(255, 107, 107, 0.7);
+  color: #ffe2e2;
+  box-shadow:
+    0 0 0 2px rgba(255,107,107,0.18),
+    0 6px 14px rgba(255,107,107,0.15);
+}
+
+.state-btn.active.kind-na {
+  background: rgba(167, 182, 200, 0.28);
+  border-color: rgba(167, 182, 200, 0.7);
+  color: #f0f6ff;
+  box-shadow:
+    0 0 0 2px rgba(167,182,200,0.18),
+    0 6px 14px rgba(167,182,200,0.12);
+}
+
+.state-btn.active.kind-ok {
+  background: rgba(89, 217, 142, 0.28);
+  border-color: rgba(89, 217, 142, 0.7);
+  color: #e2ffe9;
+  box-shadow:
+    0 0 0 2px rgba(89,217,142,0.18),
+    0 6px 14px rgba(89,217,142,0.14);
+}
+
+.state-btn.active.kind-todo {
+  background: rgba(255, 209, 102, 0.28);
+  border-color: rgba(255, 209, 102, 0.75);
+  color: #fff1c6;
+  box-shadow:
+    0 0 0 2px rgba(255,209,102,0.2),
+    0 6px 14px rgba(255,209,102,0.16);
 }
 
 .state-btn:active {
   transform: scale(0.98);
 }
 
-.state-btn.active {
-  background: rgba(255,255,255,0.10);
-  border-color: rgba(255,255,255,0.22);
-}
-
-.state-btn.active.kind-ko {
-  background: rgba(255, 107, 107, 0.18);
-  border-color: rgba(255, 107, 107, 0.55);
-  color: #ffd0d0;
-}
-
-.state-btn.active.kind-na {
-  background: rgba(167, 182, 200, 0.18);
-  border-color: rgba(167, 182, 200, 0.45);
-  color: #e3edff;
-}
-
-.state-btn.active.kind-ok {
-  background: rgba(89, 217, 142, 0.18);
-  border-color: rgba(89, 217, 142, 0.45);
-  color: #c9ffe0;
-}
-
-.state-btn.active.kind-todo {
-  background: rgba(255, 209, 102, 0.18);
-  border-color: rgba(255, 209, 102, 0.45);
-  color: #ffe7b0;
-}
-
 /* ========================================================================== */
 /* 11) PROGRESS                                                               */
-/* ========================================================================== */
+
+/* === Global Progress (sticky) === */
+.global-progress {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  padding: 10px 12px;
+  background: rgba(18, 18, 22, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.global-progress__fill {
+  height: 100%;
+  border-radius: 999px;
+  width: 0%;
+  transition: width 160ms ease;
+  background: linear-gradient(90deg, rgba(90,200,250,0.9), rgba(52,199,89,0.9));
+}
+
+.global-progress__label {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.global-progress__label .muted {
+  font-weight: 500;
+  opacity: 0.75;
+  margin-left: 8px;
+}
+
+.global-progress__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.global-progress__track {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.10);
+  overflow: hidden;
+}
 
 .progress {
   background: rgba(255,255,255,0.06);
@@ -501,7 +582,6 @@ body {
 
 /* ========================================================================== */
 /* 12) RESPONSIVE                                                             */
-/* ========================================================================== */
 
 @media (max-width: 800px) {
   .meta-grid {
