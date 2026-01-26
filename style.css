@@ -3,19 +3,19 @@
 /* ========================================================================== */
 
 :root {
-  --bg: #0b0d10;
+  --bg: #3c6d30;
   --border: rgba(255,255,255,0.08);
   --btn: #1b2230;
   --btn2: #243149;
   --danger: #ff6b6b;
-  --item-bg: #1b2230;
+  --item-bg: #3f8300;
   --item-border: rgba(255,255,255,0.18);
   --muted: #9bb0c5;
   --na: #a7b6c8;
   --ok: #59d98e;
   --panel: #12161c;
   --panel2: #0f1318;
-  --section-bg: #151b23;
+  --section-bg: #8b2d2d;
   --section-border: rgba(120,160,255,0.35);
   --text: #e7eef7;
   --text-main: #e7eef7;
@@ -74,7 +74,7 @@ body {
 .topbar {
   align-items: center;
   backdrop-filter: blur(10px);
-  background: rgba(11,13,16,0.9);
+  background: rgba(0, 255, 242, 0.06);;
   border-bottom: 1px solid var(--border);
   display: flex;
   flex-wrap: wrap;
@@ -228,7 +228,7 @@ body {
 
 .meta-grid input,
 .meta-grid textarea {
-  background: #0b0f14;
+  background: #324632;
   border: 1px solid var(--border);
   border-radius: 10px;
   color: var(--text);

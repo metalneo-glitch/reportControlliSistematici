@@ -1430,14 +1430,13 @@ async function generatePdf(isBlank) {
 
   doc.setFontSize(10);
   doc.text(`Preposto: ${preposto}`, 14, 22);
-
-  doc.text(`Periodo: ${dataInizio}  ${dataFine ? "-> " + dataFine : ""}`, 14, 27);
   if (operatori) {
     doc.text(`Operatori: ${operatori}`, 14, 32);
   }
   else {
     doc.text(`Operatori: ${preposto}`, 14, 32);
   }
+  doc.text(`Periodo: ${dataInizio}  ${dataFine ? "-> " + dataFine : ""}`, 14, 27);
 
   doc.setDrawColor(200);
   doc.line(14, 39, 196, 39);
