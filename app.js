@@ -131,6 +131,8 @@ function normalizeModel(m) {
 
       if (!it.stato) it.stato = "todo";
       if (it.note === undefined) it.note = "";
+      if (it.photoDataUrl === undefined) it.photoDataUrl = "";
+      if (it.photoName === undefined) it.photoName = "";
       if (it.timestamp === undefined) it.timestamp = "";
 
       if (it.order === undefined || it.order === null || Number.isNaN(Number(it.order))) {
@@ -430,7 +432,7 @@ function renderItem(sectionId, itemId) {
     }
 
     it.timestamp = nowIso();
-touchAudit();
+    touchAudit();
   });
 
   // --- Stati: in fondo a destra ---
@@ -448,8 +450,94 @@ touchAudit();
 
   footer.appendChild(actions);
 
+  // --- Allegato foto (1 per controllo) ---
+  const attachment = document.createElement("div");
+  attachment.className = "item-attachment";
+
+  const photoInput = document.createElement("input");
+  photoInput.type = "file";
+  photoInput.accept = "image/*";
+  photoInput.className = "item-photo-input";
+  photoInput.title = "Allega una foto";
+  photoInput.hidden = true;
+
+  const photoBox = document.createElement("button");
+  photoBox.type = "button";
+  photoBox.className = "item-photo-box";
+  photoBox.title = "Aggiungi foto";
+  photoBox.innerHTML = "<span class=\"item-photo-icon\">📷</span><span class=\"item-photo-text\">Aggiungi foto</span>";
+  photoBox.addEventListener("click", () => photoInput.click());
+
+  const photoLabel = document.createElement("span");
+  photoLabel.className = "item-photo-label";
+  photoLabel.textContent = item.photoName ? `Foto: ${item.photoName}` : "Nessuna foto allegata";
+
+  const photoPreview = document.createElement("img");
+  photoPreview.className = "item-photo-preview";
+  photoPreview.alt = "Anteprima foto";
+  if (item.photoDataUrl) {
+    photoPreview.src = item.photoDataUrl;
+    photoPreview.style.display = "block";
+    photoBox.innerHTML = "";
+    photoBox.appendChild(photoPreview);
+    photoBox.classList.add("has-photo");
+  } else {
+    photoPreview.style.display = "none";
+  }
+
+  const btnClearPhoto = document.createElement("button");
+  btnClearPhoto.type = "button";
+  btnClearPhoto.className = "item-photo-clear";
+  btnClearPhoto.textContent = "×";
+  btnClearPhoto.title = "Rimuovi foto";
+  btnClearPhoto.style.display = item.photoDataUrl ? "inline-flex" : "none";
+  btnClearPhoto.addEventListener("click", (e) => {
+    e.stopPropagation();
+  });
+  btnClearPhoto.addEventListener("click", () => {
+    const it = findItem(sectionId, itemId);
+    it.photoDataUrl = "";
+    it.photoName = "";
+    photoPreview.src = "";
+    photoPreview.style.display = "none";
+    photoBox.innerHTML = "<span class=\"item-photo-icon\">📷</span><span class=\"item-photo-text\">Aggiungi foto</span>";
+    photoBox.appendChild(btnClearPhoto);
+    photoBox.classList.remove("has-photo");
+    photoLabel.textContent = "Nessuna foto allegata";
+    btnClearPhoto.style.display = "none";
+    touchAudit();
+  });
+
+  photoInput.addEventListener("change", () => {
+    const file = photoInput.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const it = findItem(sectionId, itemId);
+      it.photoDataUrl = String(reader.result || "");
+      it.photoName = file.name || "foto";
+      photoPreview.src = it.photoDataUrl;
+      photoPreview.style.display = "block";
+      photoBox.innerHTML = "";
+      photoBox.appendChild(photoPreview);
+      photoBox.appendChild(btnClearPhoto);
+      photoBox.classList.add("has-photo");
+      photoLabel.textContent = `Foto: ${it.photoName}`;
+      btnClearPhoto.style.display = "inline-flex";
+      touchAudit();
+    };
+    reader.readAsDataURL(file);
+    photoInput.value = "";
+  });
+
+  attachment.appendChild(photoInput);
+  photoBox.appendChild(btnClearPhoto);
+  attachment.appendChild(photoBox);
+  attachment.appendChild(photoLabel);
+
   grid.appendChild(titleRow);
   grid.appendChild(note);
+  grid.appendChild(attachment);
   grid.appendChild(footer);
 
   wrap.appendChild(grid);
@@ -640,7 +728,7 @@ function addControl(sectionId) {
     testo: testo.trim(),
     order: maxOrder + 10,
     stato: "todo",
-    note: "",    timestamp: ""
+    note: "", timestamp: ""
   });
 
   touchAudit();
@@ -731,7 +819,7 @@ function renameItem(sectionId, itemId) {
 
   it.testo = txt;
   it.timestamp = nowIso();
-touchAudit();
+  touchAudit();
   rerenderAll();
 }
 
@@ -820,7 +908,7 @@ function setState(sectionId, itemId, state) {
       // settiamo lo stato, ma evidenziamo subito e lasciamo l’utente scrivere note
       it.stato = "ko";
       it.timestamp = nowIso();
-touchAudit();
+      touchAudit();
       rerenderAll();
       alert("Stato KO: inserire le note (obbligatorie).");
       return;
@@ -829,7 +917,7 @@ touchAudit();
 
   it.stato = state;
   it.timestamp = nowIso();
-// Se stai uscendo da KO e le note erano marcate required, ok.
+  // Se stai uscendo da KO e le note erano marcate required, ok.
   touchAudit();
   rerenderAll();
 }
@@ -952,6 +1040,8 @@ function createNewFile() {
           order: 10,
           stato: "todo",
           note: "",
+          photoDataUrl: "",
+          photoName: "",
           timestamp: ""
         }
       ]
