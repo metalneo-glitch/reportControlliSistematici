@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Controlli Sistematici</title>
+  <title>Controlli Sistematici test</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -23,7 +23,8 @@
       <button id="btnNew" class="btn btn-icon">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M5 3h10l4 4v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm10 1.5V8h3.5L15 4.5z"></path>
-          <path d="M12 11a1 1 0 0 1 1 1v2h2a1 1 0 1 1 0 2h-2v2a1 1 0 1 1-2 0v-2H9a1 1 0 1 1 0-2h2v-2a1 1 0 0 1 1-1z"></path>
+          <path d="M12 11a1 1 0 0 1 1 1v2h2a1 1 0 1 1 0 2h-2v2a1 1 0 1 1-2 0v-2H9a1 1 0 1 1 0-2h2v-2a1 1 0 0 1 1-1z">
+          </path>
         </svg>
         <span>Nuovo</span>
       </button>
@@ -36,13 +37,17 @@
       </button>
       <button id="btnSave" class="btn btn-primary btn-icon" disabled>
         <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M4 4h12l4 4v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm2 0v6h10V6.5L13.5 4H6zm0 10v6h12v-6H6z"></path>
+          <path
+            d="M4 4h12l4 4v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm2 0v6h10V6.5L13.5 4H6zm0 10v6h12v-6H6z">
+          </path>
         </svg>
         <span>Salva</span>
       </button>
       <button id="btnClose" class="btn btn-icon" disabled>
         <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M6 5h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm3.4 4.6L12 12.2l2.6-2.6 1.4 1.4L13.4 13.6l2.6 2.6-1.4 1.4L12 15l-2.6 2.6-1.4-1.4 2.6-2.6-2.6-2.6 1.4-1.4z"></path>
+          <path
+            d="M6 5h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm3.4 4.6L12 12.2l2.6-2.6 1.4 1.4L13.4 13.6l2.6 2.6-1.4 1.4L12 15l-2.6 2.6-1.4-1.4 2.6-2.6-2.6-2.6 1.4-1.4z">
+          </path>
         </svg>
         <span>Chiudi</span>
       </button>
@@ -52,16 +57,16 @@
     </div>
 
     <div id="globalProgressBar" class="global-progress">
-  <div class="global-progress__row">
-    <div class="global-progress__label">
-      Avanzamento totale: <span id="globalProgressText">0%</span>
-      <span id="globalProgressCounts" class="muted"></span>
+      <div class="global-progress__row">
+        <div class="global-progress__label">
+          Avanzamento totale: <span id="globalProgressText">0%</span>
+          <span id="globalProgressCounts" class="muted"></span>
+        </div>
+      </div>
+      <div class="global-progress__track">
+        <div id="globalProgressFill" class="global-progress__fill" style="width:0%"></div>
+      </div>
     </div>
-  </div>
-  <div class="global-progress__track">
-    <div id="globalProgressFill" class="global-progress__fill" style="width:0%"></div>
-  </div>
-</div>
 
   </header>
 
@@ -125,7 +130,11 @@
   <script src="libs/jspdf.umd.min.js"></script>
   <script src="libs/jspdf-autotable.min.js"></script>
 
+  <!-- Logo inline fallback per file:// -->
+  <script src="assets/logo.inline.js"></script>
+
   <!-- App -->
+  <script src="pdf.js"></script>
   <script src="app.js"></script>
 </body>
 
