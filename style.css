@@ -437,6 +437,79 @@ body {
   border-color: rgba(255,107,107,0.6);
 }
 
+.item-attachment {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 8px 12px;
+  align-items: center;
+}
+
+.item-photo-input {
+  max-width: 220px;
+}
+
+.item-photo-label {
+  color: #b7c3b9;
+  font-size: 12px;
+}
+
+.item-photo-box {
+  align-items: center;
+  background: #0b1016;
+  border: 1px dashed rgba(255,255,255,0.25);
+  border-radius: 10px;
+  color: var(--text);
+  cursor: pointer;
+  display: inline-flex;
+  gap: 8px;
+  justify-content: center;
+  min-height: 120px;
+  min-width: 200px;
+  position: relative;
+  padding: 6px 12px;
+}
+
+.item-photo-box:hover {
+  border-color: rgba(255,255,255,0.45);
+}
+
+.item-photo-icon {
+  font-size: 18px;
+}
+
+.item-photo-text {
+  font-size: 12px;
+}
+
+.item-photo-clear {
+  align-items: center;
+  background: rgba(0,0,0,0.55);
+  border: 1px solid rgba(255,255,255,0.35);
+  border-radius: 999px;
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 16px;
+  height: 24px;
+  justify-content: center;
+  line-height: 1;
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  width: 24px;
+}
+
+.item-photo-preview {
+  display: block;
+  height: 100%;
+  object-fit: contain;
+  width: 100%;
+}
+
+.item-photo-box.has-photo {
+  padding: 0;
+}
+
 .row-actions {
   align-items: center;
   display: flex;

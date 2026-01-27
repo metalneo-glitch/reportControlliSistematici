@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SRC_HTML="$ROOT_DIR/index.html"
-OUT_HTML="$ROOT_DIR/dist/single.html"
+OUT_HTML="$ROOT_DIR/dist/index_single.html"
 
 python3 - <<'PY'
 from pathlib import Path
@@ -34,6 +34,27 @@ def inline_js(html: str, src_path: str) -> str:
     return html.replace(tag, repl, 1)
 
 html = inline_css(html, "style.css")
+
+# Inline logo <img> src with hardcoded data URL (for standalone)
+logo_inline = (root / "assets" / "logo.inline.js").read_text(encoding="utf-8")
+m = re.search(r'(?:window\.)?LOGO_DATA_URL\s*=\s*"([^"]+)"', logo_inline)
+if not m:
+    raise SystemExit("LOGO_DATA_URL not found in assets/logo.inline.js")
+data_url = m.group(1)
+html = re.sub(r'<img\s+class="app-logo"\s+src="[^"]+"', f'<img class="app-logo" src="{data_url}"', html, count=1)
+
+# Inline favicon <link> using assets/favicon.inline.js (if present)
+fav_inline_path = root / "assets" / "favicon.inline.js"
+if fav_inline_path.exists():
+    fav_inline = fav_inline_path.read_text(encoding="utf-8")
+    fm = re.search(r'(?:window\.)?FAVICON_DATA_URL\s*=\s*"([^"]+)"', fav_inline)
+    if not fm:
+        raise SystemExit("FAVICON_DATA_URL not found in assets/favicon.inline.js")
+    fav_url = fm.group(1)
+    if re.search(r'<link\s+rel="icon"[^>]*>', html):
+        html = re.sub(r'<link\s+rel="icon"[^>]*>', f'<link rel="icon" href="{fav_url}" type="image/png" />', html, count=1)
+    else:
+        html = re.sub(r'</title>', '</title>\n  ' + f'<link rel="icon" href="{fav_url}" type="image/png" />', html, count=1)
 
 # Inline JS in the same order as index.html
 for js in [
