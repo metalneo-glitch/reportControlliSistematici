@@ -3,6 +3,7 @@
 Questo progetto nasce per gestire i **controlli sistematici annuali** delle centrali idroelettriche.
 
 L’obiettivo è sostituire:
+
 - file Excel unici che crescono all’infinito
 - mail lunghe e poco strutturate
 - appunti sparsi tra carta e PC
@@ -56,7 +57,6 @@ Non richiede installazioni, server o connessione internet.
 └─ esempi/
 └─ CentraleA_2026.json
 
-
 ---
 
 ## Avvio
@@ -78,4 +78,3 @@ Non serve altro.
 
 Utilizzato in fase di prova su centrali reali.  
 Il codice è volutamente semplice e modificabile.
-
