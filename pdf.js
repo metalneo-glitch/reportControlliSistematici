@@ -5,6 +5,18 @@
 
 let logoDataUrl = undefined;    // cache logo per PDF
 
+function pad2(n) {
+  return String(n).padStart(2, "0");
+}
+
+function formatDateDDMMYYYY(d) {
+  if (!(d instanceof Date) || Number.isNaN(d.getTime())) return "";
+  const day = pad2(d.getDate());
+  const month = pad2(d.getMonth() + 1);
+  const year = d.getFullYear();
+  return `${day}/${month}/${year}`;
+}
+
 /* 14) PDF                                                                     */
 /* ========================================================================== */
 
@@ -121,7 +133,7 @@ async function generatePdf(isBlank) {
   }
 
   const pageCount = doc.getNumberOfPages();
-  const gen = new Date().toLocaleString();
+  const gen = formatDateDDMMYYYY(new Date());
 
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);

@@ -16,6 +16,7 @@
 
 let model = null;          // JSON in memoria
 let openedFileName = "";   // per suggerire il nome in export
+let showCompleted = true;  // mostra/nasconde controlli non "todo"
 
 
 /* ========================================================================== */
@@ -50,8 +51,44 @@ function makeUniqueId(prefix, existingSet) {
   return id;
 }
 
-function nowIso() {
-  return new Date().toISOString();
+function formatDateDDMMYYYY(d) {
+  if (!(d instanceof Date) || Number.isNaN(d.getTime())) return "";
+  const day = pad2(d.getDate());
+  const month = pad2(d.getMonth() + 1);
+  const year = d.getFullYear();
+  return `${day}/${month}/${year}`;
+}
+
+function formatYmdToDmy(ymd) {
+  const m = String(ymd || "").match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!m) return "";
+  return `${m[3]}/${m[2]}/${m[1]}`;
+}
+
+function formatDmyToYmd(dmy) {
+  const m = String(dmy || "").match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (!m) return "";
+  return `${m[3]}-${m[2]}-${m[1]}`;
+}
+
+function normalizeDateString(value) {
+  const str = String(value ?? "").trim();
+  if (!str) return "";
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(str)) return str;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return formatYmdToDmy(str);
+  const d = new Date(str);
+  if (!Number.isNaN(d.getTime())) return formatDateDDMMYYYY(d);
+  return str;
+}
+
+function inputValueToDmy(value) {
+  if (!value) return "";
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(value)) return value;
+  return formatYmdToDmy(value);
+}
+
+function nowDmy() {
+  return formatDateDDMMYYYY(new Date());
 }
 
 function pad2(n) {
@@ -70,8 +107,9 @@ function enableUi(enabled) {
   const ids = [
     "btnSave", "btnClose", "btnResetStates", "btnPdfBlank", "btnPdfState",
     "btnExpandAll", "btnCollapseAll", "btnAddSection",
+    "btnToggleCompleted",
     "metaCentraleNome", "metaAnno", "metaPreposto",
-    "metaDataInizio", "metaDataFine", "metaNoteGenerali",
+    "metaDataInizio", "metaDataFine", "metaOreFunzionamento", "metaNoteGenerali",
     "metaOperatori"
   ];
   for (const id of ids) {
@@ -105,6 +143,10 @@ function normalizeModel(m) {
   m.sezioni = Array.isArray(m.sezioni) ? m.sezioni : [];
   m.audit = m.audit || {};
 
+  if (m.meta.dataInizio !== undefined) m.meta.dataInizio = normalizeDateString(m.meta.dataInizio);
+  if (m.meta.dataFine !== undefined) m.meta.dataFine = normalizeDateString(m.meta.dataFine);
+  if (m.audit.lastModified !== undefined) m.audit.lastModified = normalizeDateString(m.audit.lastModified);
+
   // Se mancano order (file vecchi), li assegniamo in base all'ordine corrente dell'array
   let secOrder = 10;
 
@@ -134,6 +176,7 @@ function normalizeModel(m) {
       if (it.photoDataUrl === undefined) it.photoDataUrl = "";
       if (it.photoName === undefined) it.photoName = "";
       if (it.timestamp === undefined) it.timestamp = "";
+      if (it.timestamp) it.timestamp = normalizeDateString(it.timestamp);
 
       if (it.order === undefined || it.order === null || Number.isNaN(Number(it.order))) {
         it.order = itemOrder;
@@ -175,7 +218,7 @@ function validateModel(m) {
 
 function touchAudit() {
   if (!model.audit) model.audit = {};
-  model.audit.lastModified = nowIso();
+  model.audit.lastModified = nowDmy();
   model.audit.lastModifiedBy = (model.meta.operatori || model.meta.preposto || "").trim();
 }
 
@@ -191,13 +234,22 @@ function bindMeta() {
     ["metaOperatori", "operatori"],
     ["metaDataInizio", "dataInizio"],
     ["metaDataFine", "dataFine"],
+    ["metaOreFunzionamento", "oreFunzionamento"],
     ["metaNoteGenerali", "noteGenerali"]
   ];
   for (const [id, key] of fields) {
     const el = document.getElementById(id);
     el.addEventListener("input", () => {
       if (!model) return;
-      model.meta[key] = (key === "anno") ? Number(el.value) : el.value;
+      if (key === "anno") {
+        model.meta[key] = Number(el.value);
+      } else if (key === "dataInizio" || key === "dataFine") {
+        model.meta[key] = inputValueToDmy(el.value);
+      } else if (key === "oreFunzionamento") {
+        model.meta[key] = el.value === "" ? "" : Number(el.value);
+      } else {
+        model.meta[key] = el.value;
+      }
       touchAudit();
       updateSubtitle();
     });
@@ -210,8 +262,9 @@ function renderMeta() {
   document.getElementById("metaAnno").value = model.meta.anno ?? "";
   document.getElementById("metaPreposto").value = model.meta.preposto ?? "";
   document.getElementById("metaOperatori").value = model.meta.operatori || "";
-  document.getElementById("metaDataInizio").value = model.meta.dataInizio ?? "";
-  document.getElementById("metaDataFine").value = model.meta.dataFine ?? "";
+  document.getElementById("metaDataInizio").value = formatDmyToYmd(model.meta.dataInizio ?? "");
+  document.getElementById("metaDataFine").value = formatDmyToYmd(model.meta.dataFine ?? "");
+  document.getElementById("metaOreFunzionamento").value = model.meta.oreFunzionamento ?? "";
   document.getElementById("metaNoteGenerali").value = model.meta.noteGenerali ?? "";
 }
 
@@ -222,6 +275,7 @@ function clearMetaInputs() {
   document.getElementById("metaOperatori").value = "";
   document.getElementById("metaDataInizio").value = "";
   document.getElementById("metaDataFine").value = "";
+  document.getElementById("metaOreFunzionamento").value = "";
   document.getElementById("metaNoteGenerali").value = "";
 }
 
@@ -431,7 +485,7 @@ function renderItem(sectionId, itemId) {
       else note.classList.remove("required");
     }
 
-    it.timestamp = nowIso();
+    it.timestamp = nowDmy();
     touchAudit();
   });
 
@@ -542,6 +596,17 @@ function renderItem(sectionId, itemId) {
 
   wrap.appendChild(grid);
   return wrap;
+}
+
+function shouldRenderItem(item) {
+  if (showCompleted) return true;
+  return (item.stato || "todo") === "todo";
+}
+
+function updateToggleCompletedLabel() {
+  const btn = document.getElementById("btnToggleCompleted");
+  if (!btn) return;
+  btn.textContent = showCompleted ? "Nascondi completati" : "Mostra completati";
 }
 
 function renderSections(openSet = new Set()) {
@@ -687,6 +752,7 @@ function renderSections(openSet = new Set()) {
     // items
     const itemsSorted = sortByOrder(section.items || []);
     for (const item of itemsSorted) {
+      if (!shouldRenderItem(item)) continue;
       body.appendChild(renderItem(section.id, item.id));
     }
 
@@ -702,6 +768,7 @@ function rerenderAll() {
   const openSet = new Set(openIds);
 
   updateSubtitle();
+  updateToggleCompletedLabel();
   renderMeta();
   renderGlobalProgress();
   renderSections(openSet);
@@ -818,7 +885,7 @@ function renameItem(sectionId, itemId) {
   if (!txt) return;
 
   it.testo = txt;
-  it.timestamp = nowIso();
+  it.timestamp = nowDmy();
   touchAudit();
   rerenderAll();
 }
@@ -907,7 +974,7 @@ function setState(sectionId, itemId, state) {
     if (!String(it.note ?? "").trim()) {
       // settiamo lo stato, ma evidenziamo subito e lasciamo l’utente scrivere note
       it.stato = "ko";
-      it.timestamp = nowIso();
+      it.timestamp = nowDmy();
       touchAudit();
       rerenderAll();
       alert("Stato KO: inserire le note (obbligatorie).");
@@ -916,7 +983,7 @@ function setState(sectionId, itemId, state) {
   }
 
   it.stato = state;
-  it.timestamp = nowIso();
+  it.timestamp = nowDmy();
   // Se stai uscendo da KO e le note erano marcate required, ok.
   touchAudit();
   rerenderAll();
@@ -1085,6 +1152,7 @@ function resetAllStates() {
   model.meta.operatori = "";
   model.meta.dataInizio = "";
   model.meta.dataFine = "";
+  model.meta.oreFunzionamento = "";
   model.meta.noteGenerali = "";
 
   model.audit = {};
@@ -1141,6 +1209,11 @@ function init() {
 
   document.getElementById("btnExpandAll").addEventListener("click", () => expandCollapseAll(true));
   document.getElementById("btnCollapseAll").addEventListener("click", () => expandCollapseAll(false));
+  document.getElementById("btnToggleCompleted").addEventListener("click", () => {
+    showCompleted = !showCompleted;
+    updateToggleCompletedLabel();
+    rerenderAll();
+  });
 
   document.getElementById("btnAddSection").addEventListener("click", addSection);
 

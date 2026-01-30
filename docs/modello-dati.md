@@ -19,7 +19,8 @@ Esempio nome file: CentraleA_2026.json
     "preposto": "Mario Rossi",
     "operatori": "Rossi, Bianchi",
     "dataInizio": "2026-03-12",
-    "dataFine": ""
+    "dataFine": "",
+    "oreFunzionamento": 1250
   },
   "sezioni": []
 }
