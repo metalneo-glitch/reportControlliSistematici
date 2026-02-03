@@ -62,8 +62,9 @@ body {
 }
 
 .title h1 {
-  font-size: 18px;
+  font-size: clamp(16px, 2.2vw, 18px);
   font-weight: 700;
+  line-height: 1.2;
   margin: 0;
 }
 

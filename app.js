@@ -1263,9 +1263,8 @@ function init() {
   const morePanel = document.querySelector(".toolbar-more-panel");
 
   if (more && morePanel) {
-    morePanel.addEventListener("click", (e) => {
-      const btn = e.target.closest("button");
-      if (btn && !btn.disabled) more.open = false;
+    morePanel.addEventListener("click", () => {
+      if (more.open) more.open = false;
     });
     document.addEventListener("click", (e) => {
       if (!more.open) return;
