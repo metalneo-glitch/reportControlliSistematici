@@ -7,3 +7,4 @@
 [] modalita mostra/nascondi controlli fatti (solo su richiesta esplicita)
 [X] aggiungere ore funzionamento alla pagina principale
 [X] date in formato dd/mm/yyyy
+[] aggiungere più immagini per controllo
