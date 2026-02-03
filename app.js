@@ -17,6 +17,7 @@
 let model = null;          // JSON in memoria
 let openedFileName = "";   // per suggerire il nome in export
 let showCompleted = true;  // mostra/nasconde controlli non "todo"
+const MAX_PHOTOS = 3;
 
 
 /* ========================================================================== */
@@ -59,6 +60,14 @@ function formatDateDDMMYYYY(d) {
   return `${day}/${month}/${year}`;
 }
 
+function formatDateYYYYMMDD(d) {
+  if (!(d instanceof Date) || Number.isNaN(d.getTime())) return "";
+  const day = pad2(d.getDate());
+  const month = pad2(d.getMonth() + 1);
+  const year = d.getFullYear();
+  return `${year}${month}${day}`;
+}
+
 function formatYmdToDmy(ymd) {
   const m = String(ymd || "").match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if (!m) return "";
@@ -79,6 +88,12 @@ function normalizeDateString(value) {
   const d = new Date(str);
   if (!Number.isNaN(d.getTime())) return formatDateDDMMYYYY(d);
   return str;
+}
+
+function syncLegacyPhotoFields(it) {
+  const first = Array.isArray(it.photos) ? it.photos.find(p => p && p.dataUrl) : null;
+  it.photoDataUrl = first ? first.dataUrl : "";
+  it.photoName = first ? first.name : "";
 }
 
 function inputValueToDmy(value) {
@@ -175,6 +190,15 @@ function normalizeModel(m) {
       if (it.note === undefined) it.note = "";
       if (it.photoDataUrl === undefined) it.photoDataUrl = "";
       if (it.photoName === undefined) it.photoName = "";
+      if (!Array.isArray(it.photos)) it.photos = [];
+      if (!it.photos.length && it.photoDataUrl) {
+        it.photos = [{ dataUrl: it.photoDataUrl, name: it.photoName || "foto" }];
+      }
+      it.photos = it.photos
+        .filter(p => p && p.dataUrl)
+        .slice(0, MAX_PHOTOS)
+        .map(p => ({ dataUrl: String(p.dataUrl || ""), name: String(p.name || "foto") }));
+      syncLegacyPhotoFields(it);
       if (it.timestamp === undefined) it.timestamp = "";
       if (it.timestamp) it.timestamp = normalizeDateString(it.timestamp);
 
@@ -504,7 +528,7 @@ function renderItem(sectionId, itemId) {
 
   footer.appendChild(actions);
 
-  // --- Allegato foto (1 per controllo) ---
+  // --- Allegato foto (fino a 3 per controllo) ---
   const attachment = document.createElement("div");
   attachment.className = "item-attachment";
 
@@ -515,52 +539,7 @@ function renderItem(sectionId, itemId) {
   photoInput.title = "Allega una foto";
   photoInput.hidden = true;
 
-  const photoBox = document.createElement("button");
-  photoBox.type = "button";
-  photoBox.className = "item-photo-box";
-  photoBox.title = "Aggiungi foto";
-  photoBox.innerHTML = "<span class=\"item-photo-icon\">📷</span><span class=\"item-photo-text\">Aggiungi foto</span>";
-  photoBox.addEventListener("click", () => photoInput.click());
-
-  const photoLabel = document.createElement("span");
-  photoLabel.className = "item-photo-label";
-  photoLabel.textContent = item.photoName ? `Foto: ${item.photoName}` : "Nessuna foto allegata";
-
-  const photoPreview = document.createElement("img");
-  photoPreview.className = "item-photo-preview";
-  photoPreview.alt = "Anteprima foto";
-  if (item.photoDataUrl) {
-    photoPreview.src = item.photoDataUrl;
-    photoPreview.style.display = "block";
-    photoBox.innerHTML = "";
-    photoBox.appendChild(photoPreview);
-    photoBox.classList.add("has-photo");
-  } else {
-    photoPreview.style.display = "none";
-  }
-
-  const btnClearPhoto = document.createElement("button");
-  btnClearPhoto.type = "button";
-  btnClearPhoto.className = "item-photo-clear";
-  btnClearPhoto.textContent = "×";
-  btnClearPhoto.title = "Rimuovi foto";
-  btnClearPhoto.style.display = item.photoDataUrl ? "inline-flex" : "none";
-  btnClearPhoto.addEventListener("click", (e) => {
-    e.stopPropagation();
-  });
-  btnClearPhoto.addEventListener("click", () => {
-    const it = findItem(sectionId, itemId);
-    it.photoDataUrl = "";
-    it.photoName = "";
-    photoPreview.src = "";
-    photoPreview.style.display = "none";
-    photoBox.innerHTML = "<span class=\"item-photo-icon\">📷</span><span class=\"item-photo-text\">Aggiungi foto</span>";
-    photoBox.appendChild(btnClearPhoto);
-    photoBox.classList.remove("has-photo");
-    photoLabel.textContent = "Nessuna foto allegata";
-    btnClearPhoto.style.display = "none";
-    touchAudit();
-  });
+  let targetPhotoIndex = -1;
 
   photoInput.addEventListener("change", () => {
     const file = photoInput.files?.[0];
@@ -568,26 +547,101 @@ function renderItem(sectionId, itemId) {
     const reader = new FileReader();
     reader.onload = () => {
       const it = findItem(sectionId, itemId);
-      it.photoDataUrl = String(reader.result || "");
-      it.photoName = file.name || "foto";
-      photoPreview.src = it.photoDataUrl;
-      photoPreview.style.display = "block";
-      photoBox.innerHTML = "";
-      photoBox.appendChild(photoPreview);
-      photoBox.appendChild(btnClearPhoto);
-      photoBox.classList.add("has-photo");
-      photoLabel.textContent = `Foto: ${it.photoName}`;
-      btnClearPhoto.style.display = "inline-flex";
+      const photos = Array.isArray(it.photos) ? [...it.photos] : [];
+      const idx = targetPhotoIndex < 0 ? photos.length : targetPhotoIndex;
+      photos[idx] = { dataUrl: String(reader.result || ""), name: file.name || "foto" };
+      it.photos = photos.filter(p => p && p.dataUrl).slice(0, MAX_PHOTOS);
+      syncLegacyPhotoFields(it);
       touchAudit();
+      rerenderAll();
     };
     reader.readAsDataURL(file);
     photoInput.value = "";
+    targetPhotoIndex = -1;
   });
 
   attachment.appendChild(photoInput);
-  photoBox.appendChild(btnClearPhoto);
-  attachment.appendChild(photoBox);
-  attachment.appendChild(photoLabel);
+
+  const photosWrap = document.createElement("div");
+  photosWrap.className = "item-photos";
+
+  const photos = Array.isArray(item.photos) ? item.photos : [];
+  for (let i = 0; i < photos.length; i++) {
+    const p = photos[i];
+    if (!p || !p.dataUrl) continue;
+
+    const card = document.createElement("div");
+    card.className = "item-photo-card";
+
+    const box = document.createElement("button");
+    box.type = "button";
+    box.className = "item-photo-box has-photo";
+    box.title = "Sostituisci foto";
+    box.addEventListener("click", () => {
+      targetPhotoIndex = i;
+      photoInput.click();
+    });
+
+    const preview = document.createElement("img");
+    preview.className = "item-photo-preview";
+    preview.alt = "Anteprima foto";
+    preview.src = p.dataUrl;
+
+    const btnClear = document.createElement("button");
+    btnClear.type = "button";
+    btnClear.className = "item-photo-clear";
+    btnClear.textContent = "×";
+    btnClear.title = "Rimuovi foto";
+    btnClear.addEventListener("click", (e) => {
+      e.stopPropagation();
+    });
+    btnClear.addEventListener("click", () => {
+      const it = findItem(sectionId, itemId);
+      const list = Array.isArray(it.photos) ? [...it.photos] : [];
+      list.splice(i, 1);
+      it.photos = list;
+      syncLegacyPhotoFields(it);
+      touchAudit();
+      rerenderAll();
+    });
+
+    const label = document.createElement("span");
+    label.className = "item-photo-label";
+    label.textContent = `Foto ${i + 1}: ${p.name || "foto"}`;
+
+    box.appendChild(preview);
+    box.appendChild(btnClear);
+    card.appendChild(box);
+    card.appendChild(label);
+    photosWrap.appendChild(card);
+  }
+
+  const addCard = document.createElement("div");
+  addCard.className = "item-photo-card";
+
+  const addBox = document.createElement("button");
+  addBox.type = "button";
+  addBox.className = "item-photo-box";
+  addBox.title = "Aggiungi foto";
+  addBox.innerHTML = "<span class=\"item-photo-icon\">📷</span><span class=\"item-photo-text\">Aggiungi foto</span>";
+  addBox.disabled = photos.length >= MAX_PHOTOS;
+  addBox.addEventListener("click", () => {
+    if (photos.length >= MAX_PHOTOS) return;
+    targetPhotoIndex = photos.length;
+    photoInput.click();
+  });
+
+  const addLabel = document.createElement("span");
+  addLabel.className = "item-photo-label";
+  addLabel.textContent = photos.length >= MAX_PHOTOS
+    ? "Limite massimo raggiunto"
+    : `Aggiungi fino a ${MAX_PHOTOS} foto`;
+
+  addCard.appendChild(addBox);
+  addCard.appendChild(addLabel);
+  photosWrap.appendChild(addCard);
+
+  attachment.appendChild(photosWrap);
 
   grid.appendChild(titleRow);
   grid.appendChild(note);
@@ -795,7 +849,10 @@ function addControl(sectionId) {
     testo: testo.trim(),
     order: maxOrder + 10,
     stato: "todo",
-    note: "", timestamp: ""
+    note: "", timestamp: "",
+    photos: [],
+    photoDataUrl: "",
+    photoName: ""
   });
 
   touchAudit();
@@ -1052,7 +1109,8 @@ function makeSuggestedFileName() {
     .replace(/\s+/g, "_")
     .replace(/[^A-Z0-9_]/g, "");
 
-  return `${safeNome}_${anno}.json`;
+  const stamp = formatDateYYYYMMDD(new Date());
+  return `${safeNome}_${anno}_${stamp}.json`;
 }
 
 
@@ -1107,6 +1165,7 @@ function createNewFile() {
           order: 10,
           stato: "todo",
           note: "",
+          photos: [],
           photoDataUrl: "",
           photoName: "",
           timestamp: ""
@@ -1142,6 +1201,9 @@ function resetAllStates() {
       it.stato = "todo";
       it.note = "";
       it.timestamp = "";
+      it.photos = [];
+      it.photoDataUrl = "";
+      it.photoName = "";
     }
   }
 

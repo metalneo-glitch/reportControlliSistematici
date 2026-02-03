@@ -17,6 +17,13 @@ function formatDateDDMMYYYY(d) {
   return `${day}/${month}/${year}`;
 }
 
+function formatDateYYYYMMDD(d) {
+  if (!(d instanceof Date) || Number.isNaN(d.getTime())) return "";
+  const day = pad2(d.getDate());
+  const month = pad2(d.getMonth() + 1);
+  const year = d.getFullYear();
+  return `${year}${month}${day}`;
+}
 /* 14) PDF                                                                     */
 /* ========================================================================== */
 
@@ -150,8 +157,8 @@ async function generatePdf(isBlank) {
     .replace(/[^A-Z0-9_]/g, "");
 
   const fileName = isBlank
-    ? `${safeNome}_${anno}_modulo_vuoto.pdf`
-    : `${safeNome}_${anno}_stato.pdf`;
+    ? `${safeNome}_${anno}_modulo_vuoto_${formatDateYYYYMMDD(new Date())}.pdf`
+    : `${safeNome}_${anno}_stato_${formatDateYYYYMMDD(new Date())}.pdf`;
 
   doc.save(fileName);
 }
@@ -166,29 +173,42 @@ function stateToBox(state) {
 }
 
 async function appendItemPhoto(doc, item, y) {
-  if (!item.photoDataUrl) return y;
+  const photos = Array.isArray(item.photos)
+    ? item.photos.filter(p => p && p.dataUrl)
+    : [];
 
-  const type = getImageType(item.photoDataUrl);
-  const dims = await getImageDims(item.photoDataUrl);
-  if (!dims) return y;
-
-  const maxW = 180;
-  const maxH = 60;
-  const scale = Math.min(maxW / dims.w, maxH / dims.h, 1);
-  const iw = Math.round(dims.w * scale);
-  const ih = Math.round(dims.h * scale);
-
-  if (y + ih + 6 > 280) {
-    doc.addPage();
-    y = 20;
+  if (!photos.length && item.photoDataUrl) {
+    photos.push({ dataUrl: item.photoDataUrl, name: item.photoName || "foto" });
   }
 
-  doc.setFontSize(9);
-  doc.text(`Foto: ${item.testo}`, 14, y);
-  y += 4;
+  if (!photos.length) return y;
 
-  doc.addImage(item.photoDataUrl, type, 14, y, iw, ih);
-  y += ih + 6;
+  for (let i = 0; i < photos.length; i++) {
+    const p = photos[i];
+    const type = getImageType(p.dataUrl);
+    const dims = await getImageDims(p.dataUrl);
+    if (!dims) continue;
+
+    const maxW = 180;
+    const maxH = 60;
+    const scale = Math.min(maxW / dims.w, maxH / dims.h, 1);
+    const iw = Math.round(dims.w * scale);
+    const ih = Math.round(dims.h * scale);
+
+    if (y + ih + 6 > 280) {
+      doc.addPage();
+      y = 20;
+    }
+
+    doc.setFontSize(9);
+    const label = photos.length > 1 ? `Foto ${i + 1}: ${item.testo}` : `Foto: ${item.testo}`;
+    doc.text(label, 14, y);
+    y += 4;
+
+    doc.addImage(p.dataUrl, type, 14, y, iw, ih);
+    y += ih + 6;
+  }
+
   return y;
 }
 
