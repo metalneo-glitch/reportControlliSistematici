@@ -120,7 +120,7 @@ function sortByOrder(arr) {
 
 function enableUi(enabled) {
   const ids = [
-    "btnSave", "btnClose", "btnResetStates", "btnPdfBlank", "btnPdfState",
+    "btnSave", "btnResetStates", "btnPdfBlank", "btnPdfState",
     "btnExpandAll", "btnCollapseAll", "btnAddSection",
     "btnToggleCompleted",
     "metaCentraleNome", "metaAnno", "metaPreposto",
@@ -1223,25 +1223,6 @@ function resetAllStates() {
   rerenderAll();
 }
 
-function closeFile() {
-  if (!model) return;
-
-  const ok = confirm("Chiudere il file corrente? Le modifiche non salvate andranno perse.");
-  if (!ok) return;
-
-  model = null;
-  openedFileName = "";
-  enableUi(false);
-  clearMetaInputs();
-  setSubtitleEmpty();
-  renderGlobalProgress();
-
-  const sections = document.getElementById("sections");
-  if (sections) {
-    sections.innerHTML = '<div class="empty-hint">Nessun file caricato.</div>';
-  }
-}
-
 /* ========================================================================== */
 /* 16) INIT                                                                    */
 /* ========================================================================== */
@@ -1264,7 +1245,6 @@ function init() {
   });
 
   document.getElementById("btnSave").addEventListener("click", exportJson);
-  document.getElementById("btnClose").addEventListener("click", closeFile);
   document.getElementById("btnResetStates").addEventListener("click", resetAllStates);
   document.getElementById("btnPdfBlank").addEventListener("click", () => generatePdf(true));
   document.getElementById("btnPdfState").addEventListener("click", () => generatePdf(false));
@@ -1278,6 +1258,20 @@ function init() {
   });
 
   document.getElementById("btnAddSection").addEventListener("click", addSection);
+
+  const more = document.querySelector(".toolbar-more");
+  const morePanel = document.querySelector(".toolbar-more-panel");
+
+  if (more && morePanel) {
+    morePanel.addEventListener("click", (e) => {
+      const btn = e.target.closest("button");
+      if (btn && !btn.disabled) more.open = false;
+    });
+    document.addEventListener("click", (e) => {
+      if (!more.open) return;
+      if (!more.contains(e.target)) more.open = false;
+    });
+  }
 
   bindMeta();
 }
